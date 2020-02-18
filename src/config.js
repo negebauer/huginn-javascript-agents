@@ -1,4 +1,5 @@
-const { NODE_ENV = 'development' } = process.env
+// since we dont have env variables in huginn
+const { NODE_ENV = 'production' } = process.env
 
 const isDev = NODE_ENV === 'development'
 const isProd = NODE_ENV === 'production'
