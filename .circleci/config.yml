@@ -55,7 +55,14 @@ jobs:
     executor: node_executor
     steps:
       - node_bootstrap
-      - run: yarn run jest
+      - run: yarn jest
+
+  build:
+    description: Builds agents
+    executor: node_executor
+    steps:
+      - node_bootstrap
+      - run: yarn build
 
 workflows:
   version: 2
@@ -69,5 +76,8 @@ workflows:
           requires:
             - bootstrap
       - test:
+          requires:
+            - bootstrap
+      - build:
           requires:
             - bootstrap
