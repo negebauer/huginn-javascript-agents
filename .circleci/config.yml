@@ -1,0 +1,73 @@
+project_folder: &project_folder ~/js-template
+node_modules_folder: &node_modules_folder ~/js-template/node_modules
+node_cache_key: &node_cache_key node-1-{{ checksum "yarn.lock" }}
+node_cache_key_short: &node_cache_second_key_short node-1
+
+version: 2.1
+
+executors:
+  node_executor:
+    working_directory: *project_folder
+    docker:
+      - image: circleci/node:13
+
+commands:
+  node_bootstrap:
+    description: Checkout code and restore node cache
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - *node_cache_key
+            - *node_cache_second_key_short
+
+jobs:
+  bootstrap:
+    description: Install node modules
+    executor: node_executor
+    steps:
+      - node_bootstrap
+      - run: yarn
+      - save_cache:
+          key: *node_cache_key
+          paths:
+            - *node_modules_folder
+
+  lint:
+    description: Run the linter
+    executor: node_executor
+    steps:
+      - node_bootstrap
+      - run: yarn lint
+
+  lint_package:
+    description: Run the linter for the package.json file
+    executor: node_executor
+    steps:
+      - node_bootstrap
+      - run: yarn lint:package
+      - run:
+          name: package.json shouldn't change
+          command: if [[ ! -z `git status --porcelain` ]]; then exit 1; fi
+
+  test:
+    description: Run tests
+    executor: node_executor
+    steps:
+      - node_bootstrap
+      - run: yarn run jest
+
+workflows:
+  version: 2
+  commit:
+    jobs:
+      - bootstrap
+      - lint:
+          requires:
+            - bootstrap
+      - lint_package:
+          requires:
+            - bootstrap
+      - test:
+          requires:
+            - bootstrap
