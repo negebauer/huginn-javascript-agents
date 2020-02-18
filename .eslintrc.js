@@ -3,5 +3,8 @@ module.exports = {
   env: {
     node: true,
     jest: true,
-  }
+  },
+  globals: {
+    Agent: true,
+  },
 }
