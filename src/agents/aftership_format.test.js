@@ -1,14 +1,8 @@
-// const { aftershipFormatPayload } = require('../mocks')
-const {
-  check,
-  // receive
-} = require('./aftership_format')
+const { aftershipFormatPayload } = require('../mocks')
+const { mockAgentCall } = require('../tests/helpers')
+const { check, receive } = require('./aftership_format')
 
 describe('aftership format', () => {
-  beforeAll(() => {
-    Agent = {}
-  })
-
   describe('check', () => {
     it('does nothing', () => {
       expect(check).not.toThrow()
@@ -18,7 +12,8 @@ describe('aftership format', () => {
 
   describe('receive', () => {
     it('generates events with info', () => {
-      // expect()
+      const mocks = mockAgentCall(receive, aftershipFormatPayload)
+      expect(mocks).toBeDefined()
     })
   })
 })
