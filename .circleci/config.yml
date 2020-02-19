@@ -9,7 +9,7 @@ executors:
   node_executor:
     working_directory: *project_folder
     docker:
-      - image: circleci/node:13
+      - image: circleci/node:13.8
 
 commands:
   node_bootstrap:
@@ -55,7 +55,24 @@ jobs:
     executor: node_executor
     steps:
       - node_bootstrap
-      - run: yarn run jest
+      - run: yarn test:coverage
+      - store_artifacts:
+          path: coverage
+      - store_test_results:
+          path: test-results
+
+  build:
+    description: Builds agents
+    executor: node_executor
+    steps:
+      - node_bootstrap
+      - run: yarn build
+      - run: zip -r dist.zip dist
+      - store_artifacts:
+          path: dist.zip
+          destination: dist.zip
+      - store_artifacts:
+          path: dist
 
 workflows:
   version: 2
@@ -69,5 +86,8 @@ workflows:
           requires:
             - bootstrap
       - test:
+          requires:
+            - bootstrap
+      - build:
           requires:
             - bootstrap
