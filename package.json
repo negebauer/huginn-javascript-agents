@@ -12,7 +12,7 @@
   "scripts": {
     "build": "webpack",
     "dev": "webpack --watch",
-    "lint": "eslint src",
+    "lint": "eslint .",
     "lint:fix": "yarn lint --fix",
     "lint:package": "prettier-package-json --write package.json",
     "release": "standard-version",
