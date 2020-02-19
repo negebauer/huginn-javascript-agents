@@ -60,6 +60,8 @@ jobs:
       - store_artifacts:
           path: coverage.zip
           destination: coverage.zip
+      - store_test_results:
+          path: test-results
 
   build:
     description: Builds agents
