@@ -17,7 +17,9 @@
     "lint:package": "prettier-package-json --write package.json",
     "release": "standard-version",
     "postrelease": "git push --follow-tags",
-    "test": "jest --watch"
+    "test": "jest",
+    "test:dev": "yarn test --watch",
+    "test:coverage": "yarn test --coverage"
   },
   "dependencies": {},
   "devDependencies": {

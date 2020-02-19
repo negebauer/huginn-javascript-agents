@@ -55,7 +55,7 @@ jobs:
     executor: node_executor
     steps:
       - node_bootstrap
-      - run: yarn jest
+      - run: yarn test
 
   build:
     description: Builds agents
