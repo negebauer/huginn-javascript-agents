@@ -18,8 +18,8 @@
     "release": "standard-version",
     "postrelease": "git push --follow-tags",
     "test": "jest",
-    "test:dev": "yarn test --watch",
-    "test:coverage": "yarn test --coverage"
+    "test:coverage": "yarn test --coverage",
+    "test:dev": "yarn test --watch"
   },
   "dependencies": {},
   "devDependencies": {
