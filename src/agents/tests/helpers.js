@@ -15,4 +15,7 @@ function mockAgentCall(fn, event, extraMocks = {}) {
   return finalMocks
 }
 
-module.exports = { mockAgentCall }
+module.exports = {
+  defaultAgentMocks,
+  mockAgentCall,
+}

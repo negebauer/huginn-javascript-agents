@@ -9,6 +9,14 @@ function generateSnapshot(
     : `tag#${subtag}-${subtag_message}-${last_updated_at}`
 }
 
+function trackingSubject({ title, tracking_number }) {
+  return `[Package] ${title} #${tracking_number}`
+}
+
+function trackingNoUpdate({ title, tracking_number }) {
+  return `No update for ${title} - ${tracking_number}`
+}
+
 function trackingBody({
   tracking_number,
   slug,
@@ -40,26 +48,39 @@ function checkpointBody({
   ${location ? `<div>${location}</div>` : '<br/>'}`
 }
 
+function extractTrackingsFromEvent(event, Agent) {
+  if (!event) return Agent.log('No event')
+
+  const { payload } = event
+  if (!payload) return Agent.log('No payload')
+
+  const { data } = payload
+  if (!data) return Agent.log('No data')
+
+  const { trackings } = data
+  if (!trackings) return Agent.log('No trackings')
+
+  if (trackings.length === 0) return Agent.log('Trackings is empty')
+
+  return trackings
+}
+
 function check() {
   // Do nothing
 }
 
 function receive({ event, Agent }) {
-  if (!event) return
-
-  const { payload: { data: { trackings } = {} } = {} } = event
-  if (!trackings || trackings.length === 0) return
+  const trackings = extractTrackingsFromEvent(event, Agent)
+  if (!trackings) return
 
   trackings.forEach(tracking => {
     const {
       id,
       last_updated_at,
-      tracking_number,
       // active,
       // tag,
       subtag,
       subtag_message,
-      title,
       // tracked_count,
       // shipment_type,
       checkpoints,
@@ -91,16 +112,17 @@ function receive({ event, Agent }) {
     if (oldSnapshot !== newSnapshot) {
       Agent.memory(id, newSnapshot)
       Agent.createEvent({
-        subject: `[Package] ${title} #${tracking_number}`,
+        subject: trackingSubject(tracking),
         body: body.replace(/\n/g, ''),
       })
     } else {
-      Agent.log(`No update for ${title} - ${tracking_number}`)
+      Agent.log(trackingNoUpdate(tracking))
     }
   })
 }
 
 function agentReceive() {
+  // console.log('this', this)
   const event = this.incomingEvents()[0]
   return receive({ Agent: this, event })
 }
@@ -110,8 +132,11 @@ Agent.receive = agentReceive
 
 module.exports = {
   generateSnapshot,
-  check,
-  receive,
+  trackingSubject,
+  trackingNoUpdate,
   trackingBody,
   checkpointBody,
+  check,
+  receive,
+  agentReceive,
 }

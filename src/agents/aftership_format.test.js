@@ -1,13 +1,16 @@
-const { mockAgentCall } = require('./tests/helpers')
+const { defaultAgentMocks, mockAgentCall } = require('./tests/helpers')
 const {
-  // trackingWithoutCheckpoints,
-  // trackingWithCheckpoints1,
-  // trackingWithCheckpoints2,
   generateEvent,
   buildTracking,
   buildCheckpoint,
 } = require('./tests/aftership_format')
-const { generateSnapshot, check, receive } = require('./aftership_format')
+const {
+  generateSnapshot,
+  trackingNoUpdate,
+  check,
+  receive,
+  agentReceive,
+} = require('./aftership_format')
 
 const testTimestamp = '2020-01-01T01:01:01'
 const testSubtag = 'InSomething'
@@ -52,41 +55,41 @@ describe('aftership format', () => {
 
   describe('receive', () => {
     describe('early exits', () => {
-      function expectNoMocksCalled(mocks) {
-        Object.keys(mocks).forEach(key => {
-          expect(mocks[key]).not.toHaveBeenCalled()
-        })
-      }
-
       describe('when there is no event', () => {
-        it('returns without doing anything', () => {
-          const mocks = mockAgentCall(receive, undefined)
-          expectNoMocksCalled(mocks)
-        })
-      })
-
-      describe('when trackings is null', () => {
-        it('returns without doing anything', () => {
-          const mocks = mockAgentCall(receive, generateEvent(null))
-          expectNoMocksCalled(mocks)
-        })
-      })
-
-      describe('when trackings is empty', () => {
-        it('returns without doing anything', () => {
-          const mocks = mockAgentCall(receive, generateEvent([]))
-          expectNoMocksCalled(mocks)
+        it('logs it and returns', () => {
+          const { log } = mockAgentCall(receive, undefined)
+          expect(log).toHaveBeenCalledWith('No event')
         })
       })
 
       describe('when payload is empty', () => {
-        const mocks = mockAgentCall(receive, { payload: undefined })
-        expectNoMocksCalled(mocks)
+        it('logs it and returns', () => {
+          const { log } = mockAgentCall(receive, { payload: undefined })
+          expect(log).toHaveBeenCalledWith('No payload')
+        })
       })
 
       describe('when payload.data is empty', () => {
-        const mocks = mockAgentCall(receive, { payload: { data: undefined } })
-        expectNoMocksCalled(mocks)
+        it('logs it and returns', () => {
+          const { log } = mockAgentCall(receive, {
+            payload: { data: undefined },
+          })
+          expect(log).toHaveBeenCalledWith('No data')
+        })
+      })
+
+      describe('when trackings is null', () => {
+        it('logs it and returns', () => {
+          const { log } = mockAgentCall(receive, generateEvent(null))
+          expect(log).toHaveBeenCalledWith('No trackings')
+        })
+      })
+
+      describe('when trackings is empty', () => {
+        it('logs it and returns', () => {
+          const { log } = mockAgentCall(receive, generateEvent([]))
+          expect(log).toHaveBeenCalledWith('Trackings is empty')
+        })
       })
     })
 
@@ -105,7 +108,7 @@ describe('aftership format', () => {
           ])
           const mocks = buildMocks(testCheckpoint, {})
           const { log } = mockAgentCall(receive, event, mocks)
-          expect(log).toHaveBeenCalled()
+          expect(log).toHaveBeenCalledWith(trackingNoUpdate(testTracking))
         })
       })
 
@@ -114,8 +117,33 @@ describe('aftership format', () => {
           const event = generateEvent([testTracking])
           const mocks = buildMocks(undefined, testTracking)
           const { log } = mockAgentCall(receive, event, mocks)
-          expect(log).toHaveBeenCalled()
+          expect(log).toHaveBeenCalledWith(trackingNoUpdate(testTracking))
         })
+      })
+    })
+
+    describe('when there is an update', () => {
+      it('calls createEvent', () => {
+        const event = generateEvent()
+        const { createEvent, memory } = mockAgentCall(receive, event)
+        const trackinsAmount = event.payload.data.trackings.length
+        expect(createEvent).toHaveBeenCalledTimes(trackinsAmount)
+        expect(memory).toHaveBeenCalledTimes(trackinsAmount * 2)
+      })
+    })
+  })
+
+  describe('agentReceive', () => {
+    describe('with undefined event', () => {
+      const Agent = {
+        ...defaultAgentMocks(),
+        incomingEvents: jest.fn(() => [undefined]),
+        agentReceive,
+      }
+
+      it('calls receive, logs and returns', () => {
+        Agent.agentReceive()
+        expect(Agent.log).toHaveBeenCalledTimes(1)
       })
     })
   })

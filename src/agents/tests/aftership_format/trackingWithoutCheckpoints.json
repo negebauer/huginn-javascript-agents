@@ -13,7 +13,7 @@
   "destination_country_iso3": null,
   "courier_destination_country_iso3": null,
   "emails": [],
-  "expected_delivery": null,
+  "expected_delivery": "2020-02-17T20:32:15",
   "ios": [],
   "note": null,
   "order_id": null,
