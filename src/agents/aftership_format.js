@@ -122,7 +122,6 @@ function receive({ event, Agent }) {
 }
 
 function agentReceive() {
-  // console.log('this', this)
   const event = this.incomingEvents()[0]
   return receive({ Agent: this, event })
 }
