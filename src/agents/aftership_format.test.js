@@ -78,6 +78,16 @@ describe('aftership format', () => {
           expectNoMocksCalled(mocks)
         })
       })
+
+      describe('when payload is empty', () => {
+        const mocks = mockAgentCall(receive, { payload: undefined })
+        expectNoMocksCalled(mocks)
+      })
+
+      describe('when payload.data is empty', () => {
+        const mocks = mockAgentCall(receive, { payload: { data: undefined } })
+        expectNoMocksCalled(mocks)
+      })
     })
 
     describe('when there is no update', () => {
