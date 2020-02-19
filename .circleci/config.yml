@@ -58,6 +58,9 @@ jobs:
       - run: yarn test:coverage
       - run: zip -r coverage.zip coverage
       - store_artifacts:
+          path: coverage
+          destination: coverage
+      - store_artifacts:
           path: coverage.zip
           destination: coverage.zip
       - store_test_results:
