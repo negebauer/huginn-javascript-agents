@@ -55,7 +55,11 @@ jobs:
     executor: node_executor
     steps:
       - node_bootstrap
-      - run: yarn test
+      - run: yarn test:coverage
+      - run: zip -r coverage.zip coverage
+      - store_artifacts:
+          path: coverage.zip
+          destination: coverage.zip
 
   build:
     description: Builds agents
@@ -63,6 +67,10 @@ jobs:
     steps:
       - node_bootstrap
       - run: yarn build
+      - run: zip -r dist.zip dist
+      - store_artifacts:
+          path: dist.zip
+          destination: dist.zip
 
 workflows:
   version: 2
