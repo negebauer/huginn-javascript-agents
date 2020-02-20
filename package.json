@@ -13,8 +13,8 @@
     "build": "webpack",
     "build:dev": "yarn build --watch",
     "deploy": "NODE_ENV=production node src/deploy.js",
-    "deploy:dev": "nodemon src/deploy.js",
     "deploy:build-dev": "yarn deploy:dev --watch dist --watch src/deploy.js",
+    "deploy:dev": "nodemon src/deploy.js",
     "lint": "eslint .",
     "lint:fix": "yarn lint --fix",
     "lint:package": "prettier-package-json --write package.json",
@@ -22,6 +22,7 @@
     "postrelease": "git push --follow-tags",
     "test": "jest",
     "test:coverage": "yarn test --coverage",
+    "test:coverage:upload": "cat coverage/lcov.info | coveralls",
     "test:dev": "yarn test --watch"
   },
   "dependencies": {
