@@ -1,19 +1,18 @@
-# @negebauer/js-template
+# Huginn javascript agents
 
-A js project template.
+[![CircleCI][circleci_badge]][circleci_url]
+[![Coveralls][coveralls_badge]][coveralls_url]
 
-## Libraries
+Javascript agents for use in [huginn](https://github.com/huginn/huginn)
 
-- eslint: Linter
-  - @negebauer/eslint-config-base: My base linter config
-- prettier: For formatting code
-  - @negebauer/prettier-config: My prettier config
-- jest: For running tests
-- nodemon: For development
-- prettier-package-json: For formatting package.json
-- standard-version: For releasing with a CHANGELOG and automatic versioning with conventional commit messages
+## Agents
 
-## Other
+- [aftership_format](./src/agents/aftership_format.js): Format events from the [aftership agent](https://github.com/huginn/huginn/wiki/Agent-Types-&-Descriptions#aftership-agent) to send them by email
+- [update_agents](./src/agents/update_agents.js): Update agents by updating credentials that store js code when a post is done to a [webhook agent](https://github.com/huginn/huginn/wiki/Agent-Types-&-Descriptions#webhook-agent) connected to this agent
 
-- ci: Configured to run in CircleCI
-- `config.js`: File where env variables are loaded
+<!-- Badges -->
+ [circleci_badge]:https://img.shields.io/circleci/build/github/negebauer/huginn-javascript-agents
+ [circleci_url]:https://circleci.com/gh/negebauer/huginn-javascript-agents
+
+  [coveralls_badge]:https://coveralls.io/repos/github/negebauer/huginn-javascript-agents/badge.svg?branch=master
+ [coveralls_url]:https://coveralls.io/github/negebauer/huginn-javascript-agents?branch=master

@@ -60,7 +60,7 @@ function extractTrackingsFromEvent(event, Agent) {
   const { trackings } = data
   if (!trackings) return Agent.log('No trackings')
 
-  if (trackings.length === 0) return Agent.log('Trackings is empty')
+  if (trackings.length === 0) return Agent.log('trackings is empty')
 
   return trackings
 }

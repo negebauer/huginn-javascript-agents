@@ -11,7 +11,10 @@
   "version": "0.0.1",
   "scripts": {
     "build": "webpack",
-    "dev": "yarn build --watch",
+    "build:dev": "yarn build --watch",
+    "deploy": "NODE_ENV=production node src/deploy.js",
+    "deploy:build-dev": "yarn deploy:dev --watch dist --watch src/deploy.js",
+    "deploy:dev": "nodemon src/deploy.js",
     "lint": "eslint .",
     "lint:fix": "yarn lint --fix",
     "lint:package": "prettier-package-json --write package.json",
@@ -19,12 +22,16 @@
     "postrelease": "git push --follow-tags",
     "test": "jest",
     "test:coverage": "yarn test --coverage",
+    "test:coverage:upload": "cat coverage/lcov.info | coveralls",
     "test:dev": "yarn test --watch"
   },
-  "dependencies": {},
+  "dependencies": {
+    "axios": "^0.19.2"
+  },
   "devDependencies": {
     "@negebauer/eslint-config-base": "^1.2.0",
     "@negebauer/prettier-config": "^1.0.3",
+    "coveralls": "^3.0.9",
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-config-prettier": "^6.10.0",

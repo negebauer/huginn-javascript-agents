@@ -88,7 +88,7 @@ describe('aftership format', () => {
       describe('when trackings is empty', () => {
         it('logs it and returns', () => {
           const { log } = mockAgentCall(receive, generateEvent([]))
-          expect(log).toHaveBeenCalledWith('Trackings is empty')
+          expect(log).toHaveBeenCalledWith('trackings is empty')
         })
       })
     })
@@ -123,7 +123,7 @@ describe('aftership format', () => {
     })
 
     describe('when there is an update', () => {
-      it('calls createEvent', () => {
+      it('creates events', () => {
         const event = generateEvent()
         const { createEvent, memory } = mockAgentCall(receive, event)
         const trackinsAmount = event.payload.data.trackings.length
