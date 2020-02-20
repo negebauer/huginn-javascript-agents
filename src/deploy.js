@@ -13,14 +13,19 @@ const {
 const distFolder = path.resolve(__dirname, '..', 'dist')
 
 function generateUploadInfoComment() {
-  const uploadedString = new Date().toISOString()
+  const date = new Date()
+  const uploadedString = `${date.toISOString()}\n${date.toString()}`
+  const longestDeployKeyLength = Object.keys(deployInfo).sort(
+    (a, b) => b.length - a.length,
+  )[0].length
   const deployString = Object.keys(deployInfo)
     .map(key => {
-      const space = key.length <= 6 ? '\t\t' : '\t'
-      return `${key}:${space}${deployInfo[key]}`
+      const spaces = ' '.repeat(longestDeployKeyLength - key.length + 2)
+      return `${key}:${spaces}${deployInfo[key]}`
     })
     .reduce((fullString, line) => `${fullString}\n${line}`, '')
-  return ['/*', uploadedString + deployString, '*/'].join('\n')
+  const infoComment = ['/*', uploadedString + deployString, '*/'].join('\n')
+  return [infoComment, date.toString()]
 }
 
 function agentPathToName(agentPath) {
@@ -32,7 +37,7 @@ async function deployAgents() {
   const [, , ...agentsToDeploy] = process.argv
 
   let agentsPaths = glob.sync(`${distFolder}/*.js`)
-  if (agentsToDeploy) {
+  if (agentsToDeploy.length > 0) {
     agentsPaths = agentsPaths.filter(agentPath =>
       agentsToDeploy.includes(agentPathToName(agentPath)),
     )
@@ -41,19 +46,21 @@ async function deployAgents() {
   console.log(
     `Deploying\n  - ${agentsPaths.map(agentPathToName).join('\n  - ')}`,
   )
-  const uploadInfoComment = generateUploadInfoComment()
-  const agentsData = await Promise.all(
+  const [uploadInfoComment, date] = generateUploadInfoComment()
+  const agentsInfo = await Promise.all(
     agentsPaths.map(async agentPath => {
       const rawAgentCode = await fs.readFile(agentPath, 'utf-8')
       const agentName = `js_${agentPathToName(agentPath)}`
       const agentCode = `${uploadInfoComment}\n${rawAgentCode}`
-      return { agentName, deployInfo, agentCode }
+      return { agentName, agentCode }
     }),
   )
 
   try {
     if (isProd || isTest || (isDev && deployInDev)) {
-      const { data } = await axios.post(agentsDeploy, { agentsData })
+      const { data } = await axios.post(agentsDeploy, {
+        body: { date, deployInfo, agentsInfo },
+      })
       console.log(data) // eslint-disable-line no-console
     }
   } catch (error) {
