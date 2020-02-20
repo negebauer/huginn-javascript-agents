@@ -1,0 +1,10 @@
+{
+  "username": "nico",
+  "commit": "24fedde1ab12609f032e65f8b831fb2a904d3047",
+  "branch": "agents-deploy",
+  "compareUrl": "local",
+  "pullRequest": "local or no pr",
+  "buildUrl": "local",
+  "buildNumber": "local",
+  "job": "local"
+}
