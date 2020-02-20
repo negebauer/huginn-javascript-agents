@@ -44,7 +44,7 @@ async function deployAgents() {
   }
   // eslint-disable-next-line no-console
   console.log(
-    `Deploying\n  - ${agentsPaths.map(agentPathToName).join('\n  - ')}`,
+    `Uploading\n  - ${agentsPaths.map(agentPathToName).join('\n  - ')}`,
   )
   const [uploadInfoComment, date] = generateUploadInfoComment()
   const agentsInfo = await Promise.all(
@@ -65,7 +65,7 @@ async function deployAgents() {
     }
   } catch (error) {
     console.error(`Error: ${error.message}`) // eslint-disable-line no-console
-    const text = `Error deploying js agents\n${error.message}`
+    const text = `Error uploading js agents\n${error.message}`
     await axios.post(reportError, { error: { text } })
   }
 }
