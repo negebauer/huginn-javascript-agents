@@ -21,6 +21,7 @@ const {
   HUGINN_WEBHOOK_REPORT_ERROR_PASSWORD,
   HOST,
   USER,
+  DEV_DEPLOY = false,
   NODE_ENV = 'development',
 } = process.env
 
@@ -29,6 +30,7 @@ const isProd = NODE_ENV === 'production'
 const isTest = NODE_ENV === 'test'
 
 const config = {
+  deployInDev: DEV_DEPLOY,
   env: {
     isDev,
     isProd,
