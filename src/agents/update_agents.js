@@ -9,6 +9,8 @@ function extractAgentInfoFromEvent(event, Agent) {
   const { agentsInfo } = payload
   if (!agentsInfo) return Agent.log('No agentsInfo')
 
+  if (agentsInfo.length === 0) return Agent.log('agentsInfo is empty')
+
   return agentsInfo
 }
 
@@ -18,7 +20,7 @@ function check() {
 }
 
 function receive({ event, Agent }) {
-  const agentsInfo = extractAgentInfoFromEvent(event, Agent) || {}
+  const agentsInfo = extractAgentInfoFromEvent(event, Agent)
   if (!agentsInfo) return
 
   agentsInfo.forEach(({ agentName, agentCode }) => {
