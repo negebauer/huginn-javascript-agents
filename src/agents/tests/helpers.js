@@ -3,6 +3,7 @@ function defaultAgentMocks() {
     log: jest.fn(),
     createEvent: jest.fn(),
     memory: jest.fn(),
+    credential: jest.fn(),
   }
 }
 
