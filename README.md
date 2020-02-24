@@ -1,7 +1,7 @@
 # Huginn javascript agents
 
-[![CircleCI][circleci_badge]][circleci_url]
-[![Coveralls][coveralls_badge]][coveralls_url]
+[![circleci_badge]][circleci_url]
+[![coveralls_badge]][coveralls_url]
 
 Javascript agents for use in [huginn](https://github.com/huginn/huginn)
 
