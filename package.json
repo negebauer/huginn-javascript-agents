@@ -26,7 +26,7 @@
     "test:dev": "yarn test --watch"
   },
   "dependencies": {
-    "axios": "^0.19.2"
+    "axios": "^0.21.1"
   },
   "devDependencies": {
     "@negebauer/eslint-config-base": "^1.2.0",
